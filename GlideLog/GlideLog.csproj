@@ -65,16 +65,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ViewModels\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Compile Update="Views\FlightListView.xaml.cs">
 	    <DependentUpon>FlightListView.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\AddOrEditFlightEntryView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\FlightListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

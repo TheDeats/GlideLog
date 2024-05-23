@@ -20,7 +20,8 @@ namespace GlideLog
 			builder.Logging.AddDebug();
 #endif
 			builder.Services.AddSingleton<FlightListView>();
-			builder.Services.AddSingleton<TotalsView>();
+            builder.Services.AddTransient<AddOrEditFlightEntryView>();
+            builder.Services.AddSingleton<TotalsView>();
 
 			return builder.Build();
 		}

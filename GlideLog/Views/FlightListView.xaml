@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GlideLog.ViewModels"
+             xmlns:models="clr-namespace:GlideLog.Models"
              x:Class="GlideLog.Views.FlightListView"
              Title="Flights">
+    <ContentPage.BindingContext>
+        <vm:FlightListViewModel/>
+    </ContentPage.BindingContext>
+    
     <VerticalStackLayout>
-        <Label 
-            Text="A list of your flights"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <CollectionView
+            VerticalOptions="Fill"
+            ItemsSource="{Binding Flights}"
+            SelectionMode="Single"
+            SelectionChangedCommand="{Binding SelectionChangedCommand}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FlightEntryModel">
+                    <VerticalStackLayout>
+
+                        <HorizontalStackLayout>
+                            <Label Text="Date:"/>
+                            <Label Text="{Binding DateNTime}"/>
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout>
+                            <Label Text="Site:"/>
+                            <Label Text="{Binding Site}"/>
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout>
+                            <Label Text="Glider:"/>
+                            <Label Text="{Binding Glider}"/>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button Text="Add Flight" Command="{Binding AddFlightCommand}"/>
     </VerticalStackLayout>
 </ContentPage>
