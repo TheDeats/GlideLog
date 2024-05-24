@@ -1,4 +1,6 @@
-﻿using GlideLog.ViewModels;
+﻿using CommunityToolkit.Maui;
+using GlideLog.Data;
+using GlideLog.ViewModels;
 using GlideLog.Views;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +13,8 @@ namespace GlideLog
 			var builder = MauiApp.CreateBuilder();
 			builder
 				.UseMauiApp<App>()
-				.ConfigureFonts(fonts =>
+                .UseMauiCommunityToolkit()
+                .ConfigureFonts(fonts =>
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
@@ -25,6 +28,7 @@ namespace GlideLog
             builder.Services.AddTransient<AddFlightEntryView>();
 			builder.Services.AddTransient<AddFlightEntryViewModel>();
             builder.Services.AddSingleton<TotalsView>();
+			builder.Services.AddSingleton<FlightDatabase>();
 
 			return builder.Build();
 		}

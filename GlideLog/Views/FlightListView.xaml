@@ -5,14 +5,18 @@
              xmlns:models="clr-namespace:GlideLog.Models"
              x:Class="GlideLog.Views.FlightListView"
              x:DataType="vm:FlightListViewModel"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Flights">
+
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
 
     <VerticalStackLayout>
         <CollectionView
             VerticalOptions="Fill"
             ItemsSource="{Binding Flights}"
-            SelectionMode="Single"
-            SelectionChangedCommand="{Binding SelectionChangedCommand}">
+            SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:FlightEntryModel">
 

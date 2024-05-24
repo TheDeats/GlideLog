@@ -10,12 +10,11 @@ namespace GlideLog.Data
 {
 	public class FlightDatabase
 	{
-		SQLiteAsyncConnection Database;
+		SQLiteAsyncConnection? Database;
 
         public FlightDatabase()
         {
-			Task[] tasks = [Task.Factory.StartNew(Init)];
-            Task.Factory.ContinueWhenAll(tasks, x => x);
+
         }
 
 		async Task Init()
@@ -29,33 +28,33 @@ namespace GlideLog.Data
 
 		public async Task<List<FlightEntryModel>> GetFlightsAsync()
 		{
-			//await Init();
-			return await Database.Table<FlightEntryModel>().ToListAsync();
+			await Init();
+			return await Database!.Table<FlightEntryModel>().ToListAsync();
 		}
 
 		public async Task<FlightEntryModel> GetFlightAsync(int id)
 		{
-			//await Init();
-			return await Database.Table<FlightEntryModel>().Where(i => i.ID == id).FirstOrDefaultAsync();
+			await Init();
+			return await Database!.Table<FlightEntryModel>().Where(i => i.ID == id).FirstOrDefaultAsync();
 		}
 
 		public async Task<int> SaveFlightAsync(FlightEntryModel flightEntry)
 		{
-			//await Init();
+			await Init();
 			if (flightEntry.ID != 0)
 			{
-				return await Database.UpdateAsync(flightEntry);
+				return await Database!.UpdateAsync(flightEntry);
 			}
 			else
 			{
-				return await Database.InsertAsync(flightEntry);
+				return await Database!.InsertAsync(flightEntry);
 			}
 		}
 
 		public async Task<int> DeleteFlightAsync(FlightEntryModel flightEntry)
 		{
-			//await Init();
-			return await Database.DeleteAsync(flightEntry);
+			await Init();
+			return await Database!.DeleteAsync(flightEntry);
 		}
 	}
 }

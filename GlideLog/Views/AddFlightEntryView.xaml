@@ -5,21 +5,50 @@
              xmlns:vm="clr-namespace:GlideLog.ViewModels"
              x:DataType="vm:AddFlightEntryViewModel"
              Title="AddFlightEntryView">
-    <VerticalStackLayout>
-        <HorizontalStackLayout>
-            <Label Text="Date:"/>
-            <Entry Text="{Binding DateNTime}"/>
-        </HorizontalStackLayout>
+    <Grid ColumnDefinitions=".25*, .75*">
+        <VerticalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="Date:"/>
+                <Entry Text="{Binding DateNTime}" Grid.Column="1"/>
+            </HorizontalStackLayout>
 
-        <HorizontalStackLayout>
-            <Label Text="Site:"/>
-            <Entry Text="{Binding Site}"/>
-        </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="Site:"/>
+                <Entry Text="{Binding Site}" Grid.Column="1"/>
+            </HorizontalStackLayout>
 
-        <HorizontalStackLayout>
-            <Label Text="Glider:"/>
-            <Entry Text="{Binding Glider}"/>
-        </HorizontalStackLayout>
-        <Button Text="Save"/>
-    </VerticalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="Glider:"/>
+                <Entry Text="{Binding Glider}" Grid.Column="1"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label Text="Flight Count:"/>
+                <Entry Text="{Binding FlightCount}" Grid.Column="1"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label Text="Hours:"/>
+                <Entry Text="{Binding Hours}" Grid.Column="1"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label Text="Minutes:"/>
+                <Entry Text="{Binding Minutes}" Grid.Column="1"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label Text="OmitFromTotals:"/>
+                <CheckBox IsChecked="{Binding OmitFromTotals}" Grid.Column="1" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label Text="Notes:"/>
+                <Entry Text="{Binding Notes}" Grid.Column="1"/>
+            </HorizontalStackLayout>
+
+            <Button Text="Save" Command="{Binding AddFlightEntryCommand}" Grid.ColumnSpan="2"/>
+        </VerticalStackLayout>
+        
+    </Grid>
 </ContentPage>

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using GlideLog.Data;
 using GlideLog.Models;
 
@@ -12,10 +13,10 @@ namespace GlideLog.ViewModels
         DateTime dateNTime;
 
         [ObservableProperty]
-        string site;
+        string site = string.Empty;
 
         [ObservableProperty]
-        string glider;
+        string glider = string.Empty;
 
         [ObservableProperty]
         int flightCount;
@@ -30,14 +31,15 @@ namespace GlideLog.ViewModels
         bool omitFromTotals;
 
         [ObservableProperty]
-        string notes;
+        string notes = string.Empty;
 
-		public AddFlightEntryViewModel()
+        public AddFlightEntryViewModel(FlightDatabase flightDatabase)
         {
-            
+            _flightDatabase = flightDatabase;
         }
 
-        public async Task<bool> AddFlightEntryAsync()
+        [RelayCommand]
+        public async Task AddFlightEntryAsync()
         {
             FlightEntryModel flightModel = new FlightEntryModel()
             {
@@ -50,11 +52,11 @@ namespace GlideLog.ViewModels
                 OmitFromTotals = this.OmitFromTotals,
                 Notes = this.Notes
             };
-            if(await _flightDatabase.SaveFlightAsync(flightModel) == 1)
+            if(await _flightDatabase.SaveFlightAsync(flightModel) == 1) //returns amount of rows added
             {
-                return true;
+                // TODO add toast success message
             }
-            return false;
+            await Shell.Current.GoToAsync("..");
         }
     }
 }
