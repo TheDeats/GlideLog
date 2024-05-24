@@ -1,4 +1,5 @@
-﻿using GlideLog.Views;
+﻿using GlideLog.ViewModels;
+using GlideLog.Views;
 using Microsoft.Extensions.Logging;
 
 namespace GlideLog
@@ -20,7 +21,9 @@ namespace GlideLog
 			builder.Logging.AddDebug();
 #endif
 			builder.Services.AddSingleton<FlightListView>();
-            builder.Services.AddTransient<AddOrEditFlightEntryView>();
+			builder.Services.AddSingleton<FlightListViewModel>();
+            builder.Services.AddTransient<AddFlightEntryView>();
+			builder.Services.AddTransient<AddFlightEntryViewModel>();
             builder.Services.AddSingleton<TotalsView>();
 
 			return builder.Build();

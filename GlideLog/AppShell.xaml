@@ -18,10 +18,5 @@
             Title="Totals"
             ContentTemplate="{DataTemplate views:TotalsView}"
             Route="TotalView" />
-
-        <ShellContent
-            Title="add"
-            ContentTemplate="{DataTemplate views:AddOrEditFlightEntryView}"
-            Route="AddOrEditFlightEntryView" />
     </TabBar>
 </Shell>

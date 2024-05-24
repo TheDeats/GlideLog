@@ -1,28 +1,27 @@
-﻿using GlideLog.Data;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using GlideLog.Data;
 using GlideLog.Models;
-using System;
-using System.Collections.Generic;
+using GlideLog.Views;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GlideLog.ViewModels
 {
-    public class FlightListViewModel
+    public partial class FlightListViewModel : ObservableObject
     {
         public FlightDatabase _database;
-        public ObservableCollection<FlightEntryModel> Flights { get; set; } = new();
 
-        public ICommand AddFlightCommand { get; private set; }
+        [ObservableProperty]
+        ObservableCollection<FlightEntryModel> flights;
+
         public ICommand SelectionChangedCommand {  get; private set; }
 
         public FlightListViewModel()
         {
+            Flights = new();
             _database = new FlightDatabase();
             SelectionChangedCommand = new Command(OnSelectionChanged);
-            AddFlightCommand = new Command(AddFlight);
         }
 
         public void OnSelectionChanged()
@@ -30,10 +29,19 @@ namespace GlideLog.ViewModels
 
         }
 
-        public void AddFlight()
+		[RelayCommand]
+		async Task AddFlight()
         {
-            // implement navigation
-            Shell.Current.GoToAsync("AddOrEditFlightEntryView");
+            await Shell.Current.GoToAsync(nameof(AddFlightEntryView));
         }
-    }
+
+		[RelayCommand]
+		void DeleteFlight(FlightEntryModel flightEntryModel)
+		{
+            if (Flights.Contains(flightEntryModel))
+            {
+                Flights.Remove(flightEntryModel);
+            }
+		}
+	}
 }
