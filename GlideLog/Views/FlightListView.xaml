@@ -15,8 +15,8 @@
     <VerticalStackLayout>
         <Grid Margin="5,10,5,10" ColumnDefinitions=".50*, .50*, .50*">
             <Button Text="Add Flight" Command="{Binding AddFlightCommand}"/>
-            <Button Text="Import List" Command="{Binding AddFlightCommand}" Grid.Column="1" Margin="5,0"/>
-            <Button Text="Export List" Command="{Binding AddFlightCommand}" Grid.Column="2"/>
+            <Button Text="Import Log" Command="{Binding ImportCommand}" Grid.Column="1" Margin="5,0"/>
+            <Button Text="Export Log" Command="{Binding ExportCommand}" Grid.Column="2"/>
         </Grid>
 
         <CollectionView
@@ -40,7 +40,7 @@
                                 <Grid RowDefinitions="auto, auto, auto" ColumnDefinitions="auto, *">
                                     <HorizontalStackLayout>
                                         <Label Text="Date: "/>
-                                        <Label Text="{Binding DateNTime, StringFormat='{0:MM/dd/yy hh:mm tt}'}"/>
+                                        <Label Text="{Binding DateTime, StringFormat='{0:MM/dd/yy hh:mm tt}'}"/>
                                     </HorizontalStackLayout>
 
                                     <HorizontalStackLayout Grid.Row="1">
@@ -63,7 +63,7 @@
                                         <Label Text="{Binding Hours, StringFormat='{0:D2}:'}" HorizontalTextAlignment="End" Padding="0"/>
                                         <Label Text="{Binding Minutes, StringFormat='{0:D2}'}" HorizontalTextAlignment="End" Padding="0"/>
                                     </HorizontalStackLayout>
-                                    <Label Text="{Binding Notes}" Grid.Column="1" Grid.Row="2" HeightRequest="21"/>
+                                    <Label Text="{Binding Notes}" Grid.Column="1" Grid.Row="2" HeightRequest="21" HorizontalOptions="End"/>
                                 </Grid>
 
                             </VerticalStackLayout>

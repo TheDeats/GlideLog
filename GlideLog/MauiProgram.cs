@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using GlideLog.Data;
+using GlideLog.Models;
 using GlideLog.ViewModels;
 using GlideLog.Views;
 using Microsoft.Extensions.Logging;
@@ -28,8 +29,12 @@ namespace GlideLog
 #endif
 			builder.Services.AddSingleton<FlightListView>();
 			builder.Services.AddSingleton<FlightListViewModel>();
+			builder.Services.AddSingleton<FlightListModel>();
+
             builder.Services.AddTransient<AddFlightEntryView>();
 			builder.Services.AddTransient<AddFlightEntryViewModel>();
+			builder.Services.AddTransient<AddFlightEntryModel>();
+
             builder.Services.AddSingleton<TotalsView>();
 			builder.Services.AddSingleton<FlightDatabase>();
 
