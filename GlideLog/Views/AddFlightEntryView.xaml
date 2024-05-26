@@ -8,8 +8,13 @@
     <Grid ColumnDefinitions=".25*, .75*">
         <VerticalStackLayout>
             <HorizontalStackLayout>
-                <Label Text="Date:"/>
-                <Entry Text="{Binding DateNTime}" Grid.Column="1"/>
+                <Label Text="Date: "/>
+                <DatePicker Date="{Binding Date}"  Grid.Column="1"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label Text="Time:"/>
+                <TimePicker Time="{Binding Time}" Grid.Column="1"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout>

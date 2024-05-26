@@ -6,13 +6,19 @@
              x:Class="GlideLog.Views.FlightListView"
              x:DataType="vm:FlightListViewModel"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="Flights">
+             Title="Flight List">
 
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
 
     <VerticalStackLayout>
+        <Grid Margin="5,10,5,10" ColumnDefinitions=".50*, .50*, .50*">
+            <Button Text="Add Flight" Command="{Binding AddFlightCommand}"/>
+            <Button Text="Import List" Command="{Binding AddFlightCommand}" Grid.Column="1" Margin="5,0"/>
+            <Button Text="Export List" Command="{Binding AddFlightCommand}" Grid.Column="2"/>
+        </Grid>
+
         <CollectionView
             VerticalOptions="Fill"
             ItemsSource="{Binding Flights}"
@@ -29,29 +35,44 @@
                             </SwipeItems>
                         </SwipeView.RightItems>
 
-                        <VerticalStackLayout>
+                        <Frame Padding="12" Margin="5,1">
+                            <VerticalStackLayout >
+                                <Grid RowDefinitions="auto, auto, auto" ColumnDefinitions="auto, *">
+                                    <HorizontalStackLayout>
+                                        <Label Text="Date: "/>
+                                        <Label Text="{Binding DateNTime, StringFormat='{0:MM/dd/yy hh:mm tt}'}"/>
+                                    </HorizontalStackLayout>
 
-                            <HorizontalStackLayout>
-                                <Label Text="Date:"/>
-                                <Label Text="{Binding DateNTime}"/>
-                            </HorizontalStackLayout>
+                                    <HorizontalStackLayout Grid.Row="1">
+                                        <Label Text="Site: "/>
+                                        <Label Text="{Binding Site}"/>
+                                    </HorizontalStackLayout>
 
-                            <HorizontalStackLayout>
-                                <Label Text="Site:"/>
-                                <Label Text="{Binding Site}"/>
-                            </HorizontalStackLayout>
+                                    <HorizontalStackLayout Grid.Row="2">
+                                        <Label Text="Glider: "/>
+                                        <Label Text="{Binding Glider}"/>
+                                    </HorizontalStackLayout>
 
-                            <HorizontalStackLayout>
-                                <Label Text="Glider:"/>
-                                <Label Text="{Binding Glider}"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
+                                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
+                                        <Label Text="Flights: " />
+                                        <Label Text="{Binding FlightCount}" HorizontalTextAlignment="End"/>
+                                    </HorizontalStackLayout>
 
+                                    <HorizontalStackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="End">
+                                        <Label Text="Hours: " />
+                                        <Label Text="{Binding Hours, StringFormat='{0:D2}:'}" HorizontalTextAlignment="End" Padding="0"/>
+                                        <Label Text="{Binding Minutes, StringFormat='{0:D2}'}" HorizontalTextAlignment="End" Padding="0"/>
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding Notes}" Grid.Column="1" Grid.Row="2" HeightRequest="21"/>
+                                </Grid>
+
+                            </VerticalStackLayout>
+                        </Frame>
+                        
                     </SwipeView>
-                     
+                    
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Text="Add Flight" Command="{Binding AddFlightCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

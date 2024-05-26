@@ -1,4 +1,5 @@
-﻿using Android.Widget;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GlideLog.Data;
@@ -11,7 +12,6 @@ namespace GlideLog.ViewModels
     public partial class FlightListViewModel : ObservableObject
     {
         private FlightDatabase _database;
-        private bool _initialLoad = true;
 
         [ObservableProperty]
         ObservableCollection<FlightEntryModel> flights;
@@ -33,29 +33,33 @@ namespace GlideLog.ViewModels
         {
             try
             {
-                if (_initialLoad)
+                // Get the flights from the database
+                List<FlightEntryModel> myFlights = new List<FlightEntryModel>();
+                Task.Run(async () =>
                 {
-                    List<FlightEntryModel> myFlights = new List<FlightEntryModel>();
-                    Task.Run(async () =>
-                    {
-                        myFlights = await _database.GetFlightsAsync();
-                    }).Wait();
-                    UpdateFlightsCollection(myFlights);
-                    _initialLoad = false;
-                }
+                    myFlights = await _database.GetFlightsAsync();
+                }).Wait();
+
+                // Update the UI
+                UpdateFlightsCollection(myFlights);
             }
             catch(Exception ex)
             {
-                // TODO handle db load error
-                // display db load error
-            }
+				CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+				ToastDuration duration = ToastDuration.Short;
+				double fontSize = 14;
+				string message = $"Failed To Load Flights From the Database: {ex.Message}";
+				var toast = Toast.Make(message, duration, fontSize);
+				toast.Show(cancellationTokenSource.Token);
+			}
         }
 
         [RelayCommand]
-		void DeleteFlight(FlightEntryModel flightEntryModel)
+		async Task DeleteFlight(FlightEntryModel flightEntryModel)
 		{
             if (Flights.Contains(flightEntryModel))
             {
+                await _database.DeleteFlightAsync(flightEntryModel);
                 Flights.Remove(flightEntryModel);
             }
 		}
