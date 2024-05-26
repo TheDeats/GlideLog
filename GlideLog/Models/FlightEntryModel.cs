@@ -37,7 +37,7 @@ namespace GlideLog.Models
 		}
 	}
 
-	public class FlightEntry
+	public class CsvFlightEntry
 	{
 		public DateTime DateTime { get; set; }
 		public string Site { get; set; } = string.Empty;

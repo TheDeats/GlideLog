@@ -1,10 +1,6 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Storage;
-using CsvHelper;
+﻿using CsvHelper;
 using GlideLog.Data;
 using System.Globalization;
-using System.Threading;
-using static SQLite.SQLite3;
 
 namespace GlideLog.Models
 {
@@ -43,10 +39,10 @@ namespace GlideLog.Models
 			// Get the flights from the database
 			List<FlightEntryModel> dbFlights = await _database.GetFlightsAsync();
 			// Strip the ID
-			List<FlightEntry> strippedID = new List<FlightEntry>();
+			List<CsvFlightEntry> strippedID = new List<CsvFlightEntry>();
 			foreach(FlightEntryModel flight in dbFlights)
 			{
-				strippedID.Add(new FlightEntry()
+				strippedID.Add(new CsvFlightEntry()
 				{
 					DateTime = flight.DateTime,
 					Site = flight.Site,
@@ -59,12 +55,13 @@ namespace GlideLog.Models
 				});
 			}
 
+			// Write to csv file
 			if(dbFlights.Count > 0)
 			{
 				using (TextWriter writer = new StreamWriter($"{path}\\GlideLog.csv"))
 				{
 					var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-					csv.WriteHeader<FlightEntry>();
+					csv.WriteHeader<CsvFlightEntry>();
 					csv.NextRecord();
 					csv.WriteRecords(strippedID);
 				}
@@ -75,22 +72,27 @@ namespace GlideLog.Models
 
 		public async Task<List<FlightEntryModel>> ImportToDatabaseAsync(string path)
 		{
-			List<FlightEntry> flights = new List<FlightEntry>();
+			List<CsvFlightEntry> flights = new List<CsvFlightEntry>();
 			List<FlightEntryModel> flightsToReturn = new List<FlightEntryModel>();
+
 			using (StreamReader reader = new StreamReader(path))
 			{
 				using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 				{
-					flights = csv.GetRecords<FlightEntry>().ToList();
+					// Get the flights from the csv file
+					flights = csv.GetRecords<CsvFlightEntry>().ToList();
+
+					// Get the flights from the database
 					List<FlightEntryModel> dbFlights = await _database.GetFlightsAsync();
-					foreach(FlightEntry flight in flights)
+
+					// If the csv flight doesn't exist in the database then add it to the database and to the list of flights to be returned
+					foreach(CsvFlightEntry flight in flights)
 					{
 						if (!LookForMatchingFlights(flight, dbFlights))
 						{
 							FlightEntryModel flightEntryModel = FlightEntryToFlightEntryModel(flight);
 							if (await _database.SaveFlightAsync(flightEntryModel) == 1) //returns amount of rows added
 							{
-								// if we fail to add it to the database then remove it from the list being returned
 								flightsToReturn.Add(flightEntryModel);
 							}
 						}
@@ -102,7 +104,7 @@ namespace GlideLog.Models
 			return flightsToReturn;
 		}
 
-		private bool LookForMatchingFlights(FlightEntry flightEntry, List<FlightEntryModel> flightEntryModels)
+		private bool LookForMatchingFlights(CsvFlightEntry flightEntry, List<FlightEntryModel> flightEntryModels)
 		{
 			foreach (var model in flightEntryModels)
 			{
@@ -119,7 +121,7 @@ namespace GlideLog.Models
 			return false;
 		}
 
-		private FlightEntryModel FlightEntryToFlightEntryModel(FlightEntry flightEntry)
+		private FlightEntryModel FlightEntryToFlightEntryModel(CsvFlightEntry flightEntry)
 		{
 			return new FlightEntryModel()
 			{
