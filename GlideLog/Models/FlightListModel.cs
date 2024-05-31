@@ -33,7 +33,8 @@ namespace GlideLog.Models
 			return false;
 		}
 
-		public async Task<bool> ExportFromDatabaseAsync(string path)
+
+        public async Task<bool> ExportFromDatabaseAsync(string path)
 		{
 
 			// Get the flights from the database
@@ -58,14 +59,37 @@ namespace GlideLog.Models
 			// Write to csv file
 			if(dbFlights.Count > 0)
 			{
-				using (TextWriter writer = new StreamWriter($"{path}\\GlideLog.csv"))
+				try
 				{
-					var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-					csv.WriteHeader<CsvFlightEntry>();
-					csv.NextRecord();
-					csv.WriteRecords(strippedID);
+                    var statusRead = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+                    var statusWrite = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+
+					//string androidExternalStorageDirectory = "/storage/emulated/0/";
+					//string androidDocumentsDirectory = androidExternalStorageDirectory + "Documents/";
+					//Directory.CreateDirectory(androidGlideLogDirectory);
+					//string glideLogFile = Path.Combine(androidGlideLogDirectory, "GlideLog.csv");
+                    // Android.OS.Environment.ExternalStorageDirectory
+                    //string targetFile = System.IO.Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "GlideLog.csv"); //FileSystem.Current.AppDataDirectory
+
+                    string targetFile = System.IO.Path.Combine(path, "GlideLog.csv");
+					
+                    if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
+                    {
+                        using (TextWriter writer = new StreamWriter(targetFile))
+                        {
+                            var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                            csv.WriteHeader<CsvFlightEntry>();
+                            csv.NextRecord();
+                            csv.WriteRecords(strippedID);
+                        }
+						return true;
+                    }
+                }
+                catch (Exception ex)
+				{
+					// TODO: handle exception properly
+					string message = ex.Message;	
 				}
-				return true;
 			}
 			return false;
 		}

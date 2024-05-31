@@ -60,9 +60,12 @@ namespace GlideLog.ViewModels
 		{
 			try
 			{
-				var folderPickerResult = await FolderPicker.PickAsync(_cancellationTokenSource.Token);
+                var folderPickerResult = await FolderPicker.PickAsync(_cancellationTokenSource.Token);
 				if (folderPickerResult.IsSuccessful)
 				{
+                    PermissionStatus statusread = await Permissions.RequestAsync<Permissions.StorageRead>();
+                    PermissionStatus statuswrite = await Permissions.RequestAsync<Permissions.StorageWrite>();
+
                     if (await _flightListModel.ExportFromDatabaseAsync(folderPickerResult.Folder.Path))
                     {
 						string message = $"Successfully Exported the Glide Log";
