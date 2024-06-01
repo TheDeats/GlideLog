@@ -11,8 +11,8 @@ namespace GlideLog.ViewModels
     public partial class FlightListViewModel : ObservableObject
     {
         private FlightListModel _flightListModel;
-        
 		private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+		private bool _firstLoad = true;
 
 		[ObservableProperty]
         ObservableCollection<FlightEntryModel> flights;
@@ -30,18 +30,25 @@ namespace GlideLog.ViewModels
         }
 
         [RelayCommand]
-        public void Appearing()
+        public async Task Appearing()
         {
             try
             {
-                List<FlightEntryModel> dbFlights = _flightListModel.GetFlightsFromDataBase();
+				if (_firstLoad) 
+				{
+					string message = $"Loading Flights";
+					var toast = Toast.Make(message);
+					await toast.Show(_cancellationTokenSource.Token);
+					_firstLoad = false;
+				}
+				List<FlightEntryModel> dbFlights = await _flightListModel.GetFlightsFromDataBase();
 				UpdateFlightsCollection(dbFlights);
             }
             catch(Exception ex)
             {
 				string message = $"Failed To Load Flights From the Database: {ex.Message}";
 				var toast = Toast.Make(message);
-				toast.Show(_cancellationTokenSource.Token);
+				await toast.Show(_cancellationTokenSource.Token);
 			}
         }
 
@@ -53,6 +60,17 @@ namespace GlideLog.ViewModels
                 await _flightListModel.DeleteFlightFromDatabaseAsync(flightEntryModel);
                 Flights.Remove(flightEntryModel);
             }
+		}
+
+		[RelayCommand]
+		async Task EditFlight(FlightEntryModel flightEntryModel)
+		{
+			var navigationParameter = new ShellNavigationQueryParameters
+	        {
+		        { "Flight", flightEntryModel }
+	        };
+
+			await Shell.Current.GoToAsync(nameof(EditFlightEntryView), navigationParameter);
 		}
 
 		[RelayCommand]
@@ -115,14 +133,7 @@ namespace GlideLog.ViewModels
 
         public void UpdateFlightsCollection(List<FlightEntryModel> flightEntryModels)
         {
-            foreach(FlightEntryModel flight in flightEntryModels)
-            {
-                if (!Flights.Contains(flight))
-                {
-					Flights.Add(flight);
-				}
-            }
-            List<FlightEntryModel> ordered = Flights.OrderByDescending(x => x.DateTime).ToList();
+            List<FlightEntryModel> ordered = flightEntryModels.OrderByDescending(x => x.DateTime).ToList();
             Flights.Clear();
 			foreach (FlightEntryModel flight in ordered)
 			{

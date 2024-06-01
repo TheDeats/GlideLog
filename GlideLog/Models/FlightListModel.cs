@@ -14,14 +14,10 @@ namespace GlideLog.Models
 			_database = database;
 		}
 
-		public List<FlightEntryModel> GetFlightsFromDataBase()
+		public async Task<List<FlightEntryModel>> GetFlightsFromDataBase()
 		{
 			List<FlightEntryModel> dbFlights = new();
-			Task.Run(async () =>
-			{
-				dbFlights = await _database.GetFlightsAsync();
-			}).Wait();
-			return dbFlights;
+			return await _database.GetFlightsAsync();
 		}
 
 		public async Task<bool> DeleteFlightFromDatabaseAsync(FlightEntryModel flightEntryModel)

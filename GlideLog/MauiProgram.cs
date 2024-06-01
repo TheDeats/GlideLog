@@ -38,6 +38,10 @@ namespace GlideLog
             builder.Services.AddSingleton<TotalsView>();
 			builder.Services.AddSingleton<FlightDatabase>();
 
+			builder.Services.AddTransient<EditFlightEntryView>();
+			builder.Services.AddTransient<EditFlightEntryViewModel>();
+			builder.Services.AddTransient<EditFlightEntryModel>();
+
 			return builder.Build();
 		}
 	}

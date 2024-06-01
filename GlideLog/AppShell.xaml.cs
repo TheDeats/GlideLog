@@ -9,6 +9,7 @@ namespace GlideLog
 			InitializeComponent();
 
 			Routing.RegisterRoute(nameof(AddFlightEntryView), typeof(AddFlightEntryView));
+			Routing.RegisterRoute(nameof(EditFlightEntryView), typeof(EditFlightEntryView));
 		}
 	}
 }

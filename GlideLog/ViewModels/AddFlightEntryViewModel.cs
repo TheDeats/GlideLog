@@ -7,7 +7,7 @@ namespace GlideLog.ViewModels
 {
 	public partial class AddFlightEntryViewModel : ObservableObject
 	{
-        AddFlightEntryModel _addFlightEntryModel;
+        private AddFlightEntryModel _addFlightEntryModel;
 
 		[ObservableProperty]
         string date = DateTime.Now.ToString("M/d/yyyy");

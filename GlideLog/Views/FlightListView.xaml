@@ -37,7 +37,11 @@
                         </SwipeView.RightItems>
 
                         <Frame Padding="12" Margin="5,1">
-                            <VerticalStackLayout >
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FlightListViewModel}}, Path=EditFlightCommand}" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            
+                            <VerticalStackLayout>
                                 <Grid RowDefinitions="auto, auto, auto" ColumnDefinitions="auto, *">
                                     <HorizontalStackLayout>
                                         <Label Text="Date: "/>

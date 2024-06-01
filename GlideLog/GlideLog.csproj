@@ -88,6 +88,9 @@
 	  <MauiXaml Update="Views\AddOrEditFlightEntryView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\EditFlightEntryView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\FlightListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
