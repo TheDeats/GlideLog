@@ -12,7 +12,7 @@
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
 
-    <VerticalStackLayout>
+    <Grid RowDefinitions="auto, *">
         <Grid Margin="5,10,5,10" ColumnDefinitions=".50*, .50*, .50*">
             <Button Text="Add Flight" Command="{Binding AddFlightCommand}"/>
             <Button Text="Import Log" Command="{Binding ImportCommand}" Grid.Column="1" Margin="5,0"/>
@@ -22,7 +22,8 @@
         <CollectionView
             VerticalOptions="Fill"
             ItemsSource="{Binding Flights}"
-            SelectionMode="None">
+            SelectionMode="None"
+             Grid.Row="1">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:FlightEntryModel">
 
@@ -74,5 +75,5 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

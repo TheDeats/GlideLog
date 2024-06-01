@@ -22,7 +22,7 @@ namespace GlideLog.ViewModels
         string glider = string.Empty;
 
         [ObservableProperty]
-        int flightCount;
+        int flightCount = 1;
 
         [ObservableProperty]
         int hours;
