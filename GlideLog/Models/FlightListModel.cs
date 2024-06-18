@@ -1,6 +1,9 @@
-﻿using CsvHelper;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Storage;
+using CsvHelper;
 using GlideLog.Data;
 using System.Globalization;
+using System.Text;
 
 namespace GlideLog.Models
 {
@@ -30,7 +33,7 @@ namespace GlideLog.Models
 		}
 
 
-        public async Task<bool> ExportFromDatabaseAsync(string path)
+        public async Task<bool> ExportFromDatabaseAsync()
 		{
 
 			// Get the flights from the database
@@ -64,23 +67,64 @@ namespace GlideLog.Models
 					//string androidDocumentsDirectory = androidExternalStorageDirectory + "Documents/";
 					//Directory.CreateDirectory(androidGlideLogDirectory);
 					//string glideLogFile = Path.Combine(androidGlideLogDirectory, "GlideLog.csv");
-                    // Android.OS.Environment.ExternalStorageDirectory
-                    //string targetFile = System.IO.Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "GlideLog.csv"); //FileSystem.Current.AppDataDirectory
+					// Android.OS.Environment.ExternalStorageDirectory
+					//string targetFile = System.IO.Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "GlideLog.csv"); //FileSystem.Current.AppDataDirectory
 
-                    string targetFile = System.IO.Path.Combine(path, "GlideLog.csv");
-					
-                    if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
-                    {
-                        using (TextWriter writer = new StreamWriter(targetFile))
-                        {
-                            var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-                            csv.WriteHeader<CsvFlightEntry>();
-                            csv.NextRecord();
-                            csv.WriteRecords(strippedID);
-                        }
+					string docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+					string targetFile = "GlideLog.csv"; // System.IO.Path.Combine(path, "GlideLog.csv");
+					string file = Path.Combine(docs, targetFile);  // FileSystem.AppDataDirectory  FileSystem.CacheDirectory
+
+
+					//if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
+					//{
+					//	using var memoryStream = new MemoryStream();
+					//	using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+					//	{
+					//		var csv = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
+					//		csv.WriteHeader<CsvFlightEntry>();
+					//		csv.NextRecord();
+					//		csv.WriteRecords(strippedID);
+					//		//SaveFile(cts.Token, targetFile, memoryStream);
+
+					//		//File.WriteAllBytes(file, memoryStream.ToArray());
+
+					//		//await Share.Default.RequestAsync(new ShareFileRequest
+					//		//{
+					//		//	Title = targetFile,
+					//		//	File = new ShareFile(file)
+					//		//});
+					//	}
+					//	return true;
+					//}
+
+					// ditch csv helper, write the csv file myself since it adds lines on ios :)))))
+
+
+					if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
+					{
+						using (TextWriter writer = new StreamWriter(file))
+						{
+							var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+							csv.WriteHeader<CsvFlightEntry>();
+							csv.NextRecord();
+							csv.WriteRecords(strippedID);
+						}
 						return true;
-                    }
-                }
+					}
+
+					using (StreamReader reader = new StreamReader(file))
+					{
+						using (StreamWriter writer = new StreamWriter(file))
+						{
+							reader.ReadLine();
+
+						}
+					}
+					
+
+
+				}
                 catch (Exception ex)
 				{
 					// TODO: handle exception properly
@@ -154,6 +198,19 @@ namespace GlideLog.Models
 				OmitFromTotals = flightEntry.OmitFromTotals,
 				Notes = flightEntry.Notes,
 			};
+		}
+
+		private async Task SaveFile(CancellationToken cancellationToken, string name, MemoryStream stream)
+		{
+			var fileSaverResult = await FileSaver.Default.SaveAsync(name, stream, cancellationToken);
+			if (fileSaverResult.IsSuccessful)
+			{
+				await Toast.Make($"The file was saved successfully to location: {fileSaverResult.FilePath}").Show(cancellationToken);
+			}
+			else
+			{
+				await Toast.Make($"The file was not saved successfully with error: {fileSaverResult.Exception.Message}").Show(cancellationToken);
+			}
 		}
 	}
 }

@@ -78,13 +78,13 @@ namespace GlideLog.ViewModels
 		{
 			try
 			{
-                var folderPickerResult = await FolderPicker.PickAsync(_cancellationTokenSource.Token);
-				if (folderPickerResult.IsSuccessful)
-				{
+                //var folderPickerResult = await FolderPicker.PickAsync(_cancellationTokenSource.Token);
+				//if (folderPickerResult.IsSuccessful)
+				//{
                     PermissionStatus statusread = await Permissions.RequestAsync<Permissions.StorageRead>();
                     PermissionStatus statuswrite = await Permissions.RequestAsync<Permissions.StorageWrite>();
 
-                    if (await _flightListModel.ExportFromDatabaseAsync(folderPickerResult.Folder.Path))
+                    if (await _flightListModel.ExportFromDatabaseAsync())
                     {
 						string message = $"Successfully Exported the Glide Log";
 						await Toast.Make(message).Show(_cancellationTokenSource.Token);
@@ -94,7 +94,7 @@ namespace GlideLog.ViewModels
 						string message = $"Failed To Export the Glide Log";
 						await Toast.Make(message).Show(_cancellationTokenSource.Token);
 					}
-				}
+				//}
 			}
 			catch (Exception ex)
 			{
