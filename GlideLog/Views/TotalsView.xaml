@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GlideLog.ViewModels"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="GlideLog.Views.TotalsView"
+             x:DataType="vm:TotalsViewModel"
              Title="Totals">
-    <VerticalStackLayout>
-        <Label 
-            Text="A list of your totals"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
+
+    <Grid RowDefinitions="auto, auto, *">
+        <HorizontalStackLayout HorizontalOptions="Center">
+            <Frame Margin="0,0,10,0">
+                <HorizontalStackLayout>
+                    <Label Text="Flight Count:" Margin="0,0,5,0"/>
+                    <Label Text="{Binding FlightCount}"/>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <Frame>
+                <HorizontalStackLayout>
+                    <Label Text="Flight Hours:" Margin="0,0,5,0"/>
+                    <Label Text="{Binding Hours, StringFormat='{0:D2}:'}"/>
+                    <Label Text="{Binding Minutes, StringFormat='{0:D2}'}"/>
+                </HorizontalStackLayout>
+            </Frame>
+        </HorizontalStackLayout>
+    </Grid>
 </ContentPage>

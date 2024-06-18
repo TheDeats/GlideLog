@@ -27,6 +27,8 @@ namespace GlideLog
 #if DEBUG
 			builder.Logging.AddDebug();
 #endif
+			builder.Services.AddSingleton<FlightDatabase>();
+
 			builder.Services.AddSingleton<FlightListView>();
 			builder.Services.AddSingleton<FlightListViewModel>();
 			builder.Services.AddSingleton<FlightListModel>();
@@ -36,7 +38,8 @@ namespace GlideLog
 			builder.Services.AddTransient<AddFlightEntryModel>();
 
             builder.Services.AddSingleton<TotalsView>();
-			builder.Services.AddSingleton<FlightDatabase>();
+			builder.Services.AddSingleton<TotalsViewModel>();
+			builder.Services.AddSingleton<TotalsModel>();
 
 			builder.Services.AddTransient<EditFlightEntryView>();
 			builder.Services.AddTransient<EditFlightEntryViewModel>();
