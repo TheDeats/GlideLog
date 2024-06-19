@@ -2,8 +2,8 @@
 using CommunityToolkit.Maui.Storage;
 using CsvHelper;
 using GlideLog.Data;
+using GlideLog.DirectoryManagement;
 using System.Globalization;
-using System.Text;
 
 namespace GlideLog.Models
 {
@@ -60,47 +60,45 @@ namespace GlideLog.Models
 			{
 				try
 				{
+					string fileName = "GlideLog.csv";
+					string fullPath = string.Empty;
+
+					// Android save location
+                    if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+					{
+						string androidInternalDocuments = FilePathHelper.GetInternalDocumentsPath();    // "/storage/emulated/0/Documents";
+						fullPath = Path.Combine(androidInternalDocuments, fileName);
+                    }
+
+					// iOS save location
+                    else if(DeviceInfo.Current.Platform == DevicePlatform.iOS)
+                    {
+                        fullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
+                    }
+
+                    //string targetFile = "GlideLog.csv"; // System.IO.Path.Combine(path, "GlideLog.csv");
+                    //string file = Path.Combine(path, targetFile);  // FileSystem.AppDataDirectory  FileSystem.CacheDirectory
+
+                    //		var csv = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
+                    //		csv.WriteHeader<CsvFlightEntry>();
+                    //		csv.NextRecord();
+                    //		csv.WriteRecords(strippedID);
+                    //		//SaveFile(cts.Token, targetFile, memoryStream);
+
+                    //		//File.WriteAllBytes(file, memoryStream.ToArray());
+
+                    //		//await Share.Default.RequestAsync(new ShareFileRequest
+                    //		//{
+                    //		//	Title = targetFile,
+                    //		//	File = new ShareFile(file)
+                    //		//});
+
                     var statusRead = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
                     var statusWrite = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
 
-					//string androidExternalStorageDirectory = "/storage/emulated/0/";
-					//string androidDocumentsDirectory = androidExternalStorageDirectory + "Documents/";
-					//Directory.CreateDirectory(androidGlideLogDirectory);
-					//string glideLogFile = Path.Combine(androidGlideLogDirectory, "GlideLog.csv");
-					// Android.OS.Environment.ExternalStorageDirectory
-					//string targetFile = System.IO.Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "GlideLog.csv"); //FileSystem.Current.AppDataDirectory
-
-					string docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-					string targetFile = "GlideLog.csv"; // System.IO.Path.Combine(path, "GlideLog.csv");
-					string file = Path.Combine(docs, targetFile);  // FileSystem.AppDataDirectory  FileSystem.CacheDirectory
-
-
-					//if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
-					//{
-					//	using var memoryStream = new MemoryStream();
-					//	using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
-					//	{
-					//		var csv = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
-					//		csv.WriteHeader<CsvFlightEntry>();
-					//		csv.NextRecord();
-					//		csv.WriteRecords(strippedID);
-					//		//SaveFile(cts.Token, targetFile, memoryStream);
-
-					//		//File.WriteAllBytes(file, memoryStream.ToArray());
-
-					//		//await Share.Default.RequestAsync(new ShareFileRequest
-					//		//{
-					//		//	Title = targetFile,
-					//		//	File = new ShareFile(file)
-					//		//});
-					//	}
-					//	return true;
-					//}
-
-					if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
+                    if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
 					{
-						using (StreamWriter writer = new StreamWriter(file))
+						using (StreamWriter writer = new StreamWriter(fullPath))
 						{
 							// header
 							writer.WriteLine($"{nameof(FlightEntryModel.DateTime)},{nameof(FlightEntryModel.Site)},{nameof(FlightEntryModel.Glider)},{nameof(FlightEntryModel.FlightCount)}," +
