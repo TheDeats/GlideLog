@@ -98,32 +98,22 @@ namespace GlideLog.Models
 					//	return true;
 					//}
 
-					// ditch csv helper, write the csv file myself since it adds lines on ios :)))))
-
-
 					if (statusRead == PermissionStatus.Granted && statusWrite == PermissionStatus.Granted)
-					{
-						using (TextWriter writer = new StreamWriter(file))
-						{
-							var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-							csv.WriteHeader<CsvFlightEntry>();
-							csv.NextRecord();
-							csv.WriteRecords(strippedID);
-						}
-						return true;
-					}
-
-					using (StreamReader reader = new StreamReader(file))
 					{
 						using (StreamWriter writer = new StreamWriter(file))
 						{
-							reader.ReadLine();
+							// header
+							writer.WriteLine($"{nameof(FlightEntryModel.DateTime)},{nameof(FlightEntryModel.Site)},{nameof(FlightEntryModel.Glider)},{nameof(FlightEntryModel.FlightCount)}," +
+											 $"{nameof(FlightEntryModel.Hours)},{nameof(FlightEntryModel.Minutes)},{nameof(FlightEntryModel.OmitFromTotals)},{nameof(FlightEntryModel.Notes)}");
 
+							// write lines
+							foreach(CsvFlightEntry flight in strippedID)
+							{
+								writer.WriteLine($"{flight.DateTime.ToString("M/d/yyyy H:mm")},{flight.Site},{flight.Glider},{flight.FlightCount},{flight.Hours},{flight.Minutes},{flight.OmitFromTotals},{flight.Notes}");
+							}
 						}
+						return true;
 					}
-					
-
-
 				}
                 catch (Exception ex)
 				{
