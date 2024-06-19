@@ -64,17 +64,31 @@ namespace GlideLog.Models
 					string fullPath = string.Empty;
 
 					// Android save location
-                    if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+					if (DeviceInfo.Current.Platform == DevicePlatform.Android)
 					{
 						string androidInternalDocuments = FilePathHelper.GetInternalDocumentsPath();    // "/storage/emulated/0/Documents";
 						fullPath = Path.Combine(androidInternalDocuments, fileName);
-                    }
+					}
 
 					// iOS save location
-                    else if(DeviceInfo.Current.Platform == DevicePlatform.iOS)
-                    {
-                        fullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
-                    }
+					else if (DeviceInfo.Current.Platform == DevicePlatform.iOS)
+					{
+						fullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
+					}
+
+					else if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+					{
+						var folderPickerResult = await FolderPicker.PickAsync(cts.Token);
+						if (folderPickerResult.IsSuccessful)
+						{
+                            fullPath = Path.Combine(folderPickerResult.Folder.Path, fileName);
+                        }
+					}
+
+					if(string.IsNullOrEmpty(fullPath))
+					{
+						throw new DirectoryNotFoundException("Failed to get the save file location");
+					}
 
                     //string targetFile = "GlideLog.csv"; // System.IO.Path.Combine(path, "GlideLog.csv");
                     //string file = Path.Combine(path, targetFile);  // FileSystem.AppDataDirectory  FileSystem.CacheDirectory
