@@ -35,25 +35,8 @@ namespace GlideLog.Models
 
         public async Task<bool> ExportFromDatabaseAsync()
 		{
-
 			// Get the flights from the database
 			List<FlightEntryModel> dbFlights = await _database.GetFlightsAsync();
-			// Strip the ID
-			List<CsvFlightEntry> strippedID = new List<CsvFlightEntry>();
-			foreach(FlightEntryModel flight in dbFlights)
-			{
-				strippedID.Add(new CsvFlightEntry()
-				{
-					DateTime = flight.DateTime,
-					Site = flight.Site,
-					Glider = flight.Glider,
-					FlightCount = flight.FlightCount,
-					Hours = flight.Hours,
-					Minutes = flight.Minutes,
-					OmitFromTotals = flight.OmitFromTotals,
-					Notes = flight.Notes
-				});
-			}
 
 			// Write to csv file
 			if(dbFlights.Count > 0)
@@ -119,15 +102,23 @@ namespace GlideLog.Models
 											 $"{nameof(FlightEntryModel.Hours)},{nameof(FlightEntryModel.Minutes)},{nameof(FlightEntryModel.OmitFromTotals)},{nameof(FlightEntryModel.Notes)}");
 
 							// write lines
-							foreach(CsvFlightEntry flight in strippedID)
+							foreach(FlightEntryModel flight in dbFlights)
 							{
+								// for the notes, replace right single quotation mark with apostrophe (excel can't translate replace right single quotation mark easily)
 								char rightSingleQuotationMark = '’';
 								string notes = flight.Notes;
 								if (notes.Contains(rightSingleQuotationMark))
 								{
 									notes = notes.Replace(rightSingleQuotationMark, '\'');
 								}
-								writer.WriteLine($"{flight.DateTime.ToString("M/d/yyyy H:mm")},{flight.Site},{flight.Glider},{flight.FlightCount},{flight.Hours},{flight.Minutes},{flight.OmitFromTotals},\"{notes}\"");
+
+								// if the notes contain a comma then surround the text in double quotes
+								if (notes.Contains(','))
+								{
+									notes = $"\"{notes}\"";
+								}
+
+								writer.WriteLine($"{flight.DateTime.ToString("M/d/yyyy H:mm")},{flight.Site},{flight.Glider},{flight.FlightCount},{flight.Hours},{flight.Minutes},{flight.OmitFromTotals},{notes}");
 							}
 						}
 						return true;
