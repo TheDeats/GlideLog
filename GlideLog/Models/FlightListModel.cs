@@ -121,7 +121,13 @@ namespace GlideLog.Models
 							// write lines
 							foreach(CsvFlightEntry flight in strippedID)
 							{
-								writer.WriteLine($"{flight.DateTime.ToString("M/d/yyyy H:mm")},{flight.Site},{flight.Glider},{flight.FlightCount},{flight.Hours},{flight.Minutes},{flight.OmitFromTotals},{flight.Notes}");
+								char rightSingleQuotationMark = '’';
+								string notes = flight.Notes;
+								if (notes.Contains(rightSingleQuotationMark))
+								{
+									notes = notes.Replace(rightSingleQuotationMark, '\'');
+								}
+								writer.WriteLine($"{flight.DateTime.ToString("M/d/yyyy H:mm")},{flight.Site},{flight.Glider},{flight.FlightCount},{flight.Hours},{flight.Minutes},{flight.OmitFromTotals},\"{notes}\"");
 							}
 						}
 						return true;
