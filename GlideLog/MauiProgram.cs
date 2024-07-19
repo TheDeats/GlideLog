@@ -45,6 +45,8 @@ namespace GlideLog
 			builder.Services.AddTransient<EditFlightEntryViewModel>();
 			builder.Services.AddTransient<EditFlightEntryModel>();
 
+			builder.Services.AddTransientPopup<UserEntryPopupView, UserEntryPopupViewModel>();
+
 			return builder.Build();
 		}
 	}

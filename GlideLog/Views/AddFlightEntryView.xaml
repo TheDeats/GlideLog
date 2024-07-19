@@ -19,14 +19,15 @@
         <Frame Padding="5">
             <HorizontalStackLayout>
                 <Label Text="Site:" VerticalOptions="Center" Margin="0,0,5,0"/>
-                <Entry Text="{Binding Site}" WidthRequest="235"/>
+                <!--Entry Text="{Binding Site}" WidthRequest="235"/-->
+                <Picker x:Name="SitePicker" Title="Select a Site" ItemsSource="{Binding Sites}" SelectedItem="{Binding Site}" MinimumWidthRequest="235" Unfocused="SitePicker_Unfocused"/>
             </HorizontalStackLayout>
         </Frame>
 
         <Frame Padding="5">
             <HorizontalStackLayout>
                 <Label Text="Glider:" VerticalOptions="Center" Margin="0,0,5,0"/>
-                <Entry Text="{Binding Glider}" WidthRequest="218"/>
+                <Picker x:Name="GliderPicker" Title="Select a Glider" ItemsSource="{Binding Gliders}" SelectedItem="{Binding Glider}" MinimumWidthRequest="235" Unfocused="GliderPicker_Unfocused"/>
             </HorizontalStackLayout>
         </Frame>
 

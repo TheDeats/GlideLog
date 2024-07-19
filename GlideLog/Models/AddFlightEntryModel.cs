@@ -26,5 +26,47 @@ namespace GlideLog.Models
 			catch { }
 			return false;
 		}
-    }
+
+		public async Task<IList<string>> GetSites()
+		{
+			List<string> sites = new List<string>();
+			try
+			{
+				List<FlightEntryModel> flights = await _database.GetFlightsAsync();
+				foreach (FlightEntryModel flight in flights)
+				{
+					if (!sites.Contains(flight.Site))
+					{
+						sites.Add(flight.Site);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				
+			}
+			return sites;
+		}
+
+		public async Task<IList<string>> GetGliders()
+		{
+			List<string> gliders = new List<string>();
+			try
+			{
+				List<FlightEntryModel> flights = await _database.GetFlightsAsync();
+				foreach (FlightEntryModel flight in flights)
+				{
+					if (!gliders.Contains(flight.Glider))
+					{
+						gliders.Add(flight.Glider);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+
+			}
+			return gliders;
+		}
+	}
 }

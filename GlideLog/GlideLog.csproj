@@ -87,6 +87,9 @@
 	  <Compile Update="Views\FlightListView.xaml.cs">
 	    <DependentUpon>FlightListView.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\UserEntryPopupView.xaml.cs">
+	    <DependentUpon>UserEntryPopupView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -97,6 +100,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\FlightListView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\UserEntryPopupView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TotalsView.xaml">
